@@ -5,7 +5,7 @@ export default function Header() {
       <header>
         <header className="app-header">
           <h1>🍗 </h1>
-          <h1> Food Quiz</h1>
+          <h1> The Food Quiz</h1>
         </header>
       </header>
     </>
