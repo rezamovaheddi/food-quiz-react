@@ -1,6 +1,10 @@
 import { useEffect, useReducer } from "react";
 import Header from "./components/Header";
 import MainPage from "./MainPage";
+import Loader from "./components/Loader";
+import Error from "./components/Error";
+import StartQuiz from "./components/StartQuiz";
+
 // import "./App.css";
 
 export default function App() {
@@ -11,7 +15,7 @@ export default function App() {
   };
 
   function reduce(state, action) {
-    switch (state.type) {
+    switch (action.type) {
       case "dataGet":
         return {
           ...state,
@@ -24,10 +28,11 @@ export default function App() {
           status: "error",
         };
       default:
-        throw new Error("action unkonwn");
+        throw new Error("Error action");
     }
   }
   const [state, dispatch] = useReducer(reduce, initialState);
+  const numQuestion = state.questions.length;
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((res) => res.json())
@@ -38,8 +43,9 @@ export default function App() {
     <div>
       <Header />
       <MainPage>
-        <p>quiston</p>
-        <p>awonser</p>
+        {state.status === "loading" && <Loader />}
+        {state.status === "error" && <Error />}
+        {state.status === "ready" && <StartQuiz numQuestion={numQuestion} />}
       </MainPage>
     </div>
   );
