@@ -4,6 +4,7 @@ import MainPage from "./MainPage";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
 import StartQuiz from "./components/StartQuiz";
+import Question from "./components/Question";
 
 // import "./App.css";
 
@@ -27,6 +28,11 @@ export default function App() {
           ...state,
           status: "error",
         };
+      case "start":
+        return {
+          ...state,
+          status: "active",
+        };
       default:
         throw new Error("Error action");
     }
@@ -45,7 +51,10 @@ export default function App() {
       <MainPage>
         {state.status === "loading" && <Loader />}
         {state.status === "error" && <Error />}
-        {state.status === "ready" && <StartQuiz numQuestion={numQuestion} />}
+        {state.status === "ready" && (
+          <StartQuiz numQuestion={numQuestion} dispatch={dispatch} />
+        )}
+        {state.status === "active" && <Question />}
       </MainPage>
     </div>
   );
