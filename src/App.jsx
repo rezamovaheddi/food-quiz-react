@@ -35,7 +35,7 @@ export default function App() {
           ...state,
           status: "active",
         };
-      case "":
+      case "newAnwser":
         return {
           ...state,
           anwser: action.paylaod,
