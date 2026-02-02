@@ -13,6 +13,8 @@ export default function App() {
     questions: [],
     // loading, ready, error, finished, active
     status: "loading",
+    indexQuestion: 0,
+    anwser: null,
   };
 
   function reduce(state, action) {
@@ -33,12 +35,18 @@ export default function App() {
           ...state,
           status: "active",
         };
+      case "":
+        return {
+          ...state,
+          anwser: action.paylaod,
+        };
       default:
         throw new Error("Error action");
     }
   }
   const [state, dispatch] = useReducer(reduce, initialState);
   const numQuestion = state.questions.length;
+  const indexQuestion = state.indexQuestion;
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((res) => res.json())
@@ -54,7 +62,13 @@ export default function App() {
         {state.status === "ready" && (
           <StartQuiz numQuestion={numQuestion} dispatch={dispatch} />
         )}
-        {state.status === "active" && <Question />}
+        {state.status === "active" && (
+          <Question
+            anwser={state.anwser}
+            dispatch={dispatch}
+            question={state.questions[indexQuestion]}
+          />
+        )}
       </MainPage>
     </div>
   );
