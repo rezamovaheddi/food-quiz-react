@@ -14,7 +14,8 @@ export default function App() {
     // loading, ready, error, finished, active
     status: "loading",
     indexQuestion: 0,
-    anwser: null,
+    answer: null,
+    option: 0,
   };
 
   function reduce(state, action) {
@@ -35,10 +36,14 @@ export default function App() {
           ...state,
           status: "active",
         };
-      case "newAnwser":
+      case "newAnswer":
         return {
           ...state,
-          anwser: action.paylaod,
+          answer: action.payload,
+          option:
+            action.paylaod === state.questions[indexQuestion].correctOption
+              ? state.option + state.questions[indexQuestion].points
+              : state.option,
         };
       default:
         throw new Error("Error action");
@@ -64,7 +69,7 @@ export default function App() {
         )}
         {state.status === "active" && (
           <Question
-            anwser={state.anwser}
+            answer={state.answer}
             dispatch={dispatch}
             question={state.questions[indexQuestion]}
           />
