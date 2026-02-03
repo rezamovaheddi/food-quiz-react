@@ -5,17 +5,19 @@ import Loader from "./components/Loader";
 import Error from "./components/Error";
 import StartQuiz from "./components/StartQuiz";
 import Question from "./components/Question";
+import NextBtn from "./components/NextBtn";
+import Progress from "./components/Progress";
 
 // import "./App.css";
 
 export default function App() {
   const initialState = {
-    questions: [],
     // loading, ready, error, finished, active
+    questions: [],
     status: "loading",
-    indexQuestion: 0,
+    indexq: 0,
     answer: null,
-    option: 0,
+    points: 0,
   };
 
   function reduce(state, action) {
@@ -40,10 +42,16 @@ export default function App() {
         return {
           ...state,
           answer: action.payload,
-          option:
-            action.paylaod === state.questions[indexQuestion].correctOption
-              ? state.option + state.questions[indexQuestion].points
-              : state.option,
+          points:
+            action.paylaod === state.questions[state.indexq].correctOption
+              ? state.points + state.questions[state.indexq].points
+              : state.points,
+        };
+      case "nextQuestion":
+        return {
+          ...state,
+          indexq: state.indexq + 1,
+          answer: null,
         };
       default:
         throw new Error("Error action");
@@ -51,7 +59,7 @@ export default function App() {
   }
   const [state, dispatch] = useReducer(reduce, initialState);
   const numQuestion = state.questions.length;
-  const indexQuestion = state.indexQuestion;
+  const indexQuestion = state.indexq;
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((res) => res.json())
@@ -68,11 +76,15 @@ export default function App() {
           <StartQuiz numQuestion={numQuestion} dispatch={dispatch} />
         )}
         {state.status === "active" && (
-          <Question
-            answer={state.answer}
-            dispatch={dispatch}
-            question={state.questions[indexQuestion]}
-          />
+          <>
+            <Progress index={state.indexq} numQuestion={numQuestion} />
+            <Question
+              answer={state.answer}
+              dispatch={dispatch}
+              question={state.questions[indexQuestion]}
+            />
+            <NextBtn dispatch={dispatch} answer={state.answer} />
+          </>
         )}
       </MainPage>
     </div>
