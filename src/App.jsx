@@ -43,7 +43,7 @@ export default function App() {
           ...state,
           answer: action.payload,
           points:
-            action.paylaod === state.questions[state.indexq].correctOption
+            action.payload === state.questions[state.indexq].correctOption
               ? state.points + state.questions[state.indexq].points
               : state.points,
         };
@@ -60,6 +60,7 @@ export default function App() {
   const [state, dispatch] = useReducer(reduce, initialState);
   const numQuestion = state.questions.length;
   const indexQuestion = state.indexq;
+  const maxPoints = state.questions.reduce((prev, cur) => prev + cur.points, 0);
   useEffect(() => {
     fetch("http://localhost:4000/questions")
       .then((res) => res.json())
@@ -77,7 +78,13 @@ export default function App() {
         )}
         {state.status === "active" && (
           <>
-            <Progress index={state.indexq} numQuestion={numQuestion} />
+            <Progress
+              index={state.indexq}
+              numQuestion={numQuestion}
+              maxPoints={maxPoints}
+              points={state.points}
+              answer={state.answer}
+            />
             <Question
               answer={state.answer}
               dispatch={dispatch}

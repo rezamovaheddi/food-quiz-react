@@ -6,7 +6,10 @@ export default function StartQuiz({ numQuestion, dispatch }) {
       <div className="start">
         <h2>wlecome to the food quiz app</h2>
         <h4>{numQuestion} questions</h4>
-        <button className="btn" onClick={() => dispatch({ type: "start" })}>
+        <button
+          className="btn btn-ui start-btn"
+          onClick={() => dispatch({ type: "start" })}
+        >
           start
         </button>
       </div>
