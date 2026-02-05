@@ -7,6 +7,7 @@ import StartQuiz from "./components/StartQuiz";
 import Question from "./components/Question";
 import NextBtn from "./components/NextBtn";
 import Progress from "./components/Progress";
+import Finished from "./components/Finished";
 
 // import "./App.css";
 
@@ -53,6 +54,9 @@ export default function App() {
           indexq: state.indexq + 1,
           answer: null,
         };
+      case "FINISH":
+        return { ...state, status: "finished" };
+
       default:
         throw new Error("Error action");
     }
@@ -90,8 +94,16 @@ export default function App() {
               dispatch={dispatch}
               question={state.questions[indexQuestion]}
             />
-            <NextBtn dispatch={dispatch} answer={state.answer} />
+            <NextBtn
+              index={indexQuestion}
+              numQuestion={numQuestion}
+              dispatch={dispatch}
+              answer={state.answer}
+            />
           </>
+        )}
+        {state.status === "finished" && (
+          <Finished maxPoints={maxPoints} points={state.points} />
         )}
       </MainPage>
     </div>
