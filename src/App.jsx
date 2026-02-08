@@ -8,6 +8,8 @@ import Question from "./components/Question";
 import NextBtn from "./components/NextBtn";
 import Progress from "./components/Progress";
 import Finished from "./components/Finished";
+import Footer from "./components/Footer";
+import TimerSecend from "./components/TimerSecend";
 
 // import "./App.css";
 
@@ -19,6 +21,7 @@ export default function App() {
     indexq: 0,
     answer: null,
     points: 0,
+    secend: null,
   };
 
   function reduce(state, action) {
@@ -38,6 +41,7 @@ export default function App() {
         return {
           ...state,
           status: "active",
+          secend: state.questions.length * 30,
         };
       case "newAnswer":
         return {
@@ -56,6 +60,20 @@ export default function App() {
         };
       case "FINISH":
         return { ...state, status: "finished" };
+      case "RESTART":
+        return {
+          ...state,
+          question: null,
+          status: "ready",
+          indexq: 0,
+          points: 0,
+        };
+      case "tick":
+        return {
+          ...state,
+          secend: state.secend - 1,
+          status: state.secend === 0 ? "finished" : state.status,
+        };
 
       default:
         throw new Error("Error action");
@@ -94,12 +112,15 @@ export default function App() {
               dispatch={dispatch}
               question={state.questions[indexQuestion]}
             />
-            <NextBtn
-              index={indexQuestion}
-              numQuestion={numQuestion}
-              dispatch={dispatch}
-              answer={state.answer}
-            />
+            <Footer>
+              <NextBtn
+                index={indexQuestion}
+                numQuestion={numQuestion}
+                dispatch={dispatch}
+                answer={state.answer}
+              />
+              <TimerSecend dispatch={dispatch} secend={state.secend} />
+            </Footer>
           </>
         )}
         {state.status === "finished" && (
